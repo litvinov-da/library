@@ -24,6 +24,8 @@ urlpatterns = [
 
 #redirect the base url to the catalog app
 from django.views.generic import RedirectView
+
 urlpatterns += [
     path('', RedirectView.as_view(url='catalog/', permanent='True')),
+    path('catalog/', include('catalog.urls')),
 ]
