@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib import admin
 import uuid
 
 
@@ -87,6 +88,7 @@ class Book(models.Model):
         ISBN code. Must be unique for each book, max_length = 13.
     genre : ManyToManyField
         Point to Genre model class. Each book can have many genres.
+        To print the genre(-s) on the site use display_genre method (see below). 
     LANGUAGES : list
         For choices for lang attribute.
         Description:
@@ -107,7 +109,9 @@ class Book(models.Model):
         Returns absolute url of each book. Helpfull in admin site.
     display_genre
         Returns string representation of genres as 'Genre1, Genre2, ...'.
-        Helpfull to access genre information because ManyToMany field hard to view
+        Used in admin.py for representating genres of the book because
+        ManyToManyFielf isn't supported in to print.
+        For more information see https://docs.djangoproject.com/en/4.1/ref/contrib/admin/#modeladmin-objects
     """
 
     title = models.CharField(
@@ -160,6 +164,7 @@ class Book(models.Model):
 
         return reverse('book-detail', args=[str(self.id)])
 
+    @admin.display(description="Жанры книги")
     def display_genre(self) -> str:
         """Returns string containing all genres book has
         
@@ -236,7 +241,7 @@ class BookInstance(models.Model):
 
 
     class Meta:
-        ordering = ['due_back']
+        ordering = ['status']
 
 
     def __str__(self) -> str:
