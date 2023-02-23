@@ -20,6 +20,12 @@ class Genre(models.Model):
 
     name = models.CharField(max_length=200, help_text="Введите жанр книги")
 
+
+    class Meta:
+        verbose_name = "Жанр"
+        verbose_name_plural = "Жанры"
+
+    
     def __str__(self) -> str:
         """Return string representation as the name of the genre."""
 
@@ -58,6 +64,8 @@ class Author(models.Model):
 
     class Meta:
         ordering = ['last_name', 'first_name']
+        verbose_name = "Автор"
+        verbose_name_plural = "Авторы"
 
 
     def get_absolute_url(self):
@@ -154,6 +162,11 @@ class Book(models.Model):
         )
 
 
+    class Meta:
+        verbose_name = "Книга"
+        verbose_name_plural = "Книги"
+
+
     def __str__(self) -> str:
         """Returns string representation as title of the book."""
 
@@ -242,6 +255,8 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ['status']
+        verbose_name = "Копия"
+        verbose_name_plural = "Копии"
 
 
     def __str__(self) -> str:
