@@ -15,11 +15,11 @@ class AuthorAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Имя и фамилия', {
-            'fields' : ('last_name', 'first_name')
+            'fields': ('last_name', 'first_name')
         }),
         ('Годы жизни', {
-            'fields' : ('date_birth', 'date_death'),
-            'description' : ('Введите дату рождения и смерти.\
+            'fields': ('date_birth', 'date_death'),
+            'description': ('Введите дату рождения и смерти.\
                             при отсутствии даты смерти оставьте поле пустым.')
         })
     )
@@ -45,14 +45,16 @@ class BookInstanceAdmin(admin.ModelAdmin):
     list_filter = (
         'status', 'due_back', 'imprint'
     )
+    list_display = (
+        'book', 'status', 'borrower', 'due_back', 'id'
+    )
 
     fieldsets = (
         (None, {
             'fields': ('book', 'imprint', 'id')
         }),
         ('Доступность', {
-            'fields': ('status', 'due_back'),
-            'description' : ("Статус книги и дата её возвращения (если была занята).")
+            'fields': ('status', 'due_back', 'borrower'),
+            'description': ("Статус книги, дата её возвращения и кем была занята (если была занята).")
         })
     )
-

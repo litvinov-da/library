@@ -1,8 +1,10 @@
+from datetime import date
 from django.db import models
 from django.urls import reverse
 from django.contrib import admin
 import uuid
 
+from django.contrib.auth.models import User
 
 class Genre(models.Model):
     """Genre model to represent genre of each book.
@@ -212,11 +214,15 @@ class BookInstance(models.Model):
             'r' : 'Reserved'
     status : CharField
         Status of the book. Can be blank, default : 'm', choices : LOAN_STATUS
+    borrower : ForeignKey
+        Points to User model (admin.models). can be both null and blank
 
     Methods
     -------
     __str__
-        Returns string representation as "{ID} ({Title of the corresponding book})" 
+        Returns string representation as "{ID} ({Title of the corresponding book})"
+    is_overdue
+        Returns true if the book has been borrowed and hasn't been given back on time
     """
 
     id = models.UUIDField(
@@ -252,14 +258,24 @@ class BookInstance(models.Model):
         help_text='Доступность книги'
     )
 
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL,
+                                 blank=True, null=True)
+
 
     class Meta:
         ordering = ['status']
         verbose_name = "Копия"
         verbose_name_plural = "Копии"
+        permissions = (
+            ('can_mark_returned', 'Set book as returned'),
+        )
 
 
     def __str__(self) -> str:
         """Returns string representation as "{ID} ({Title of the corresponding book})" """
 
         return f"{self.id} ({self.book.title})"
+    
+    @property
+    def is_overdue(self):
+        return bool(self.due_back and date.today() > self.due_back)
